@@ -4,11 +4,13 @@ require 'socket'
 require 'timeout'
 require 'colorize'
 
-host = 'gopherpedia.com'
-host = 'khzae.net'
-port = 70
-path = '/'
-request = "#{path}\r\n"
+def url_parser(url)
+  host, path = url.split('/', 2)
+  {
+    host: host,
+    path: path
+  }
+end
 
 def request_maker(host, port, request)
   begin
@@ -59,12 +61,24 @@ end
 def display(parsed_response)
   parsed_response.each do |line|
     if line[:path] != '' then
-      puts(line[:description].blue)
+      puts(line[:description].green)
     else
       puts(line[:description])
     end
   end
 end
+
+host = 'gopherpedia.com'
+port = 70
+path = '/'
+
+if !ARGV.empty?
+  parsed_url = url_parser(ARGV[0])
+  host = parsed_url[:host]
+  path = parsed_url[:path]
+end
+
+request = "#{path}\r\n"
 
 response = request_maker(host, port, request)
 
