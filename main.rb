@@ -73,15 +73,37 @@ port = 70
 path = '/'
 
 if !ARGV.empty?
-  parsed_url = url_parser(ARGV[0])
+  parsed_url = url_parser(ARGV.pop)
   host = parsed_url[:host]
   path = parsed_url[:path]
 end
 
 request = "#{path}\r\n"
-
 response = request_maker(host, port, request)
 
 parsed_response = response_parser(response)
 
 display(parsed_response)
+
+loop do
+  print "\nCommand: "
+  command = gets
+
+  if command =~ /quit/ then
+    puts 'Quitting...'
+    break
+  elsif command.start_with?('get ') then
+    command.slice!('get ')
+    parsed_url = url_parser(command.strip)
+    host = parsed_url[:host]
+    path = parsed_url[:path]
+    request = "#{path}\r\n"
+    response = request_maker(host, port, request)
+
+    parsed_response = response_parser(response)
+
+    display(parsed_response)
+  else
+    puts 'Did not understand.'
+  end
+end
