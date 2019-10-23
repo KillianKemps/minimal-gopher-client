@@ -104,6 +104,8 @@ loop do
 
     display(parsed_response)
   else
-    puts 'Did not understand.'
+    puts "\nAvailable commands:\n\n"
+    puts "\tget [url]: Fetch [url] page"
+    puts "\tquit: Quit the gopher client"
   end
 end
